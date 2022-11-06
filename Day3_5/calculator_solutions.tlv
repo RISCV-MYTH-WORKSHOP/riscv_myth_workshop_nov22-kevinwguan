@@ -15,9 +15,9 @@
       @1
          $reset = *reset;
    
-         $cnt[31:0] = $reset ? 0 : (>>1$cnt + 1);
+         $valid = $reset ? 1'b0 : (>>1$valid + 1'b1);
    
-         $val1[31:0] = >>1$out;
+         $val1[31:0] = >>2$out;
          $val2[31:0] = $rand2[3:0];
          $sel[3:0] = $op[1:0];
    
@@ -26,8 +26,9 @@
          $prod[31:0] = $val1 * $val2;
          $quot[31:0] = $val1 / $val2;
  
+      @2   
          $out[31:0] = 
-            $reset
+            $reset || !$valid
                ? 32'b0 :
             $sel[0]
                ? $sum :
