@@ -45,7 +45,7 @@
                ? >>3$br_tgt_pc :
             >>1$reset
                ? 32'b0 :
-            >>3$pc + 32'd4;
+            >>1$pc + 32'd4;
          $imem_rd_en = ! $reset;
          $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
          
@@ -55,10 +55,6 @@
 
       // YOUR CODE HERE
       @1
-         $valid =
-            $reset ? 1'b0 :
-            $start ? 1'b1 :
-            >>3$valid;
          $instr[31:0] = $imem_rd_data[31:0];
          $is_i_instr = $instr[6:2] ==? 5'b0000x || 
                        $instr[6:2] ==? 5'b001x0 || 
@@ -129,6 +125,8 @@
          $br_tgt_pc[31:0] = $pc + $imm;
          
       @3 
+         $valid = !(>>1$valid_taken_br || >>2$valid_taken_br);
+         
          $result[31:0] =
             $is_addi ? $src1_value + $imm :
             $is_add ? $src1_value + $src2_value :
@@ -154,7 +152,6 @@
             1'b0;
          
          $valid_taken_br = $valid && $taken_br;
-      
 
 
       // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
