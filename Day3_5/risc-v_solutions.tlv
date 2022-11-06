@@ -40,11 +40,14 @@
    |cpu
       @0
          $reset = *reset;
+         $pc[31:0] = >>1$reset ? 32'b0 : >>1$pc + 32'd4;
+         
 
 
 
       // YOUR CODE HERE
-      // ...
+      @1
+         
 
       // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
       //       be sure to avoid having unassigned signals (which you might be using for random inputs)
@@ -61,7 +64,7 @@
    //  o data memory
    //  o CPU visualization
    |cpu
-      m4+imem(@1)    // Args: (read stage)
+      //m4+imem(@1)    // Args: (read stage)
       //m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
       //m4+dmem(@4)    // Args: (read/write stage)
    
