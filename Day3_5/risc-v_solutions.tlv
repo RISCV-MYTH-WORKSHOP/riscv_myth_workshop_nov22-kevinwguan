@@ -65,7 +65,8 @@
                       $is_s_instr ? { {21{$instr[31]}}, $instr[30:25], $instr[11:7] } :
                       $is_b_instr ? { {19{$instr[31]}}, $instr[7], $instr[30:25], $instr[11:8], 1'b0 } :
                       $is_u_instr ? { $instr[31:12], {12{1'b0}} } :
-                      { {11{$instr[31]}}, $instr[19:12], $instr[20], $instr[30:21], 1'b0 };
+                      $is_j_instr ? { {11{$instr[31]}}, $instr[19:12], $instr[20], $instr[30:21], 1'b0 } :
+                      32'b0;
          
          $funct7_valid = $is_r_instr;
          ?$funct7_valid
@@ -99,6 +100,11 @@
          // Until instrs are implemented,
          //quiet down the warnings.
          `BOGUS_USE($is_beq $is_bne $is_blt $is_bge $is_bltu $is_bgeu $is_addi $is_add)
+         
+         $rf_rd_en1 = $funct3_rs1_valid;
+         $rf_rd_index1[4:0] = $rs1;
+         $rf_rd_en2 = $rs2_valid;
+         $rf_rd_index2[4:0] = $rs2;
 
       // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
       //       be sure to avoid having unassigned signals (which you might be using for random inputs)
@@ -116,7 +122,7 @@
    //  o CPU visualization
    |cpu
       m4+imem(@1)    // Args: (read stage)
-      //m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      m4+rf(@1, @1)  // Args: (read stage, write stage) - if equal, no register bypass is required
       //m4+dmem(@4)    // Args: (read/write stage)
    
    m4+cpu_viz(@4)    // For visualisation, argument should be at least equal to the last stage of CPU logic. @4 would work for all labs.
