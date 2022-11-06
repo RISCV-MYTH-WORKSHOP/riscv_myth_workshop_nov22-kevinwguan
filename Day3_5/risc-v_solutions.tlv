@@ -113,6 +113,11 @@
             $is_addi ? $src1_value + $imm :
             $is_add ? $src1_value + $src2_value :
             32'bx;
+         
+         $rf_wr_data[31:0] = $result;
+         $rf_wr_index[4:0] = $rd;
+         $rf_wr_en = $rd_valid && ($rd != 0);
+      
 
       // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
       //       be sure to avoid having unassigned signals (which you might be using for random inputs)
