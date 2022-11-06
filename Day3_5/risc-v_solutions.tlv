@@ -50,15 +50,15 @@
          $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
          
          $start = (!$reset && >>1$reset) ? 1'b1 : 1'b0;
-         $valid =
-            $reset ? 1'b0 :
-            $start ? 1'b1 :
-            >>3$valid;
 
 
 
       // YOUR CODE HERE
       @1
+         $valid =
+            $reset ? 1'b0 :
+            $start ? 1'b1 :
+            >>3$valid;
          $instr[31:0] = $imem_rd_data[31:0];
          $is_i_instr = $instr[6:2] ==? 5'b0000x || 
                        $instr[6:2] ==? 5'b001x0 || 
