@@ -48,6 +48,12 @@
             >>1$pc + 32'd4;
          $imem_rd_en = ! $reset;
          $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
+         
+         $start = (!$reset && >>1$reset) ? 1'b1 : 1'b0;
+         $valid =
+            $reset ? 1'b0 :
+            $start ? 1'b1 :
+            >>3$valid;
 
 
 
