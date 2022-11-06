@@ -56,13 +56,13 @@
          $instr[31:0] = $imem_rd_data[31:0];
          $is_i_instr = $instr[6:2] ==? 5'b0000x || 
                        $instr[6:2] ==? 5'b001x0 || 
-                       $instr[6:2] == 5'b11001;
+                       $instr[6:2] ==? 5'b11001;
          $is_r_instr = $instr[6:2] ==? 5'b011x0 || 
-                       $instr[6:2] == 5'b01011 || 
-                       $instr[6:2] == 5'b10100;
+                       $instr[6:2] ==? 5'b01011 || 
+                       $instr[6:2] ==? 5'b10100;
          $is_s_instr = $instr[6:2] ==? 5'b0100x;
-         $is_b_instr = $instr[6:2] == 5'b11000;
-         $is_j_instr = $instr[6:2] == 5'b11011;
+         $is_b_instr = $instr[6:2] ==? 5'b11000;
+         $is_j_instr = $instr[6:2] ==? 5'b11011;
          $is_u_instr = $instr[6:2] ==? 5'b0x101;
          
          $imm[31:0] = $is_i_instr ? { {21{$instr[31]}}, $instr[30:20] } :
@@ -74,12 +74,14 @@
          
          $funct7_valid = $is_r_instr;
          ?$funct7_valid
-            $funct7[5:0] = $instr[31:15];
+            $funct7[6:0] = $instr[31:25];
          
          $funct3_rs1_valid = $is_r_instr || $is_i_instr || $is_s_instr || $is_b_instr;
+         //$funct3_valid = $funct3_rs1_valid;
+         //$rs1_valid = $funct3_rs1_valid;
          ?$funct3_rs1_valid
-            $funct3[1:0] = $instr[14:12];
-            $rs1[3:0] = $instr[19:15];
+            $funct3[2:0] = $instr[14:12];
+            $rs1[4:0] = $instr[19:15];
          
          $rs2_valid = $is_r_instr || $is_s_instr || $is_b_instr;
          ?$rs2_valid
@@ -87,7 +89,7 @@
 
          $rd_valid = $is_r_instr || $is_i_instr || $is_u_instr || $is_j_instr;
          ?$rd_valid
-            $rd[3:0] = $instr[11:7];
+            $rd[4:0] = $instr[11:7];
             
          $opcode[6:0] = $instr[6:0];
          
@@ -137,7 +139,7 @@
                ? $src1_value >= $src2_value :
             1'b0;
          
-         $br_tgt_pc = $pc + $imm;
+         $br_tgt_pc[31:0] = $pc + $imm;
       
 
       // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
@@ -146,7 +148,8 @@
 
    
    // Assert these to end simulation (before Makerchip cycle limit).
-   *passed = *cyc_cnt > 40;
+   //*passed = *cyc_cnt > 40;
+   *passed = |cpu/xreg[10]>>5$value == (1+2+3+4+5+6+7+8+9);
    *failed = 1'b0;
    
    // Macro instantiations for:
