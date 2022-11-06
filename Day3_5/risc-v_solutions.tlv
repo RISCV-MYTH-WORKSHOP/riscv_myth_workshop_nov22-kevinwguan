@@ -41,11 +41,11 @@
       @0
          $reset = *reset;
          $pc[31:0] =
-            >>1$taken_br
-               ? >>1$br_tgt_pc :
+            >>3$valid_taken_br
+               ? >>3$br_tgt_pc :
             >>1$reset
                ? 32'b0 :
-            >>1$pc + 32'd4;
+            >>3$pc + 32'd4;
          $imem_rd_en = ! $reset;
          $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
          
@@ -128,7 +128,7 @@
          
          $rf_wr_data[31:0] = $result;
          $rf_wr_index[4:0] = $rd;
-         $rf_wr_en = $rd_valid && ($rd != 0);
+         $rf_wr_en = $valid && $rd_valid && ($rd != 0);
          
          $taken_br = 
             $is_beq
@@ -144,6 +144,8 @@
             $is_bgeu
                ? $src1_value >= $src2_value :
             1'b0;
+         
+         $valid_taken_br = $valid && $taken_br;
          
          $br_tgt_pc[31:0] = $pc + $imm;
       
