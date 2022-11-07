@@ -103,11 +103,69 @@
          $is_bltu = $dec_bits ==? 11'bx_110_1100011;
          $is_bgeu = $dec_bits ==? 11'bx_111_1100011;
          $is_addi = $dec_bits ==? 11'bx_000_0010011;
-         $is_add = $dec_bits == 11'b0_000_0110011;
+         $is_add = $dec_bits ==? 11'b0_000_0110011;
+         $is_lui = $dec_bits ==? 11'bx_xxx_0110111;
+         $is_auipc = $dec_bits ==? 11'bx_xxx_0010111;
+         $is_jal = $dec_bits ==? 11'bx_xxx_1101111;
+         $is_jalr = $dec_bits ==? 11'bx_000_1100111;
+         $is_load = $dec_bits ==? 11'bx_xxx_0000011;
+         $is_sb = $dec_bits ==? 11'bx_000_0100011;
+         $is_sh = $dec_bits ==? 11'bx_001_0100011;
+         $is_sw = $dec_bits ==? 11'bx_010_0100011;
+         $is_slti = $dec_bits ==? 11'bx_010_0010011;
+         $is_sltiu = $dec_bits ==? 11'bx_011_0010011;
+         $is_xori = $dec_bits ==? 11'bx_100_0010011;
+         $is_ori = $dec_bits ==? 11'bx_110_0010011;
+         $is_ani = $dec_bits ==? 11'bx_111_0010011;
+         $is_slli = $dec_bits ==? 11'b0_001_0010011;
+         $is_srli = $dec_bits ==? 11'b0_101_0010011;
+         $is_srai = $dec_bits ==? 11'b1_101_0010011;
+         $is_sub = $dec_bits ==? 11'b1_000_0110011;
+         $is_sll = $dec_bits ==? 11'b0_001_0110011;
+         $is_slt = $dec_bits ==? 11'b0_010_0110011;
+         $is_sltu = $dec_bits ==? 11'b0_011_0110011;
+         $is_xor = $dec_bits ==? 11'b0_100_0110011;
+         $is_srl = $dec_bits ==? 11'b0_101_0110011;
+         $is_sra = $dec_bits ==? 11'b1_101_0110011;
+         $is_or = $dec_bits ==? 11'b0_110_0110011;
+         $is_and = $dec_bits ==? 11'b0_111_0110011;
          
          // Until instrs are implemented,
          //quiet down the warnings.
-         `BOGUS_USE($is_beq $is_bne $is_blt $is_bge $is_bltu $is_bgeu $is_addi $is_add)
+         `BOGUS_USE(
+            $is_beq 
+            $is_bne 
+            $is_blt 
+            $is_bge 
+            $is_bltu 
+            $is_bgeu 
+            $is_addi 
+            $is_add 
+            $is_lui 
+            $is_auipc 
+            $is_jal 
+            $is_jalr 
+            $is_load 
+            $is_sb 
+            $is_sh 
+            $is_sw 
+            $is_slti 
+            $is_sltiu 
+            $is_xori 
+            $is_ori 
+            $is_ani 
+            $is_slli 
+            $is_srli 
+            $is_srai 
+            $is_sub 
+            $is_sll 
+            $is_slt 
+            $is_sltu 
+            $is_xor 
+            $is_srl 
+            $is_sra 
+            $is_or 
+            $is_and)
          
       @2
          $rf_rd_en1 = $funct3_rs1_valid;
