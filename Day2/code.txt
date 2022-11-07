@@ -1,0 +1,36 @@
+# code 1
+gcc sum1ton.c
+./a.out
+
+# code 2
+riscv64-unknown-elf-gcc -O1 -mabi=lp64 -march=rv64i -o sum1ton.o sum1ton.c
+riscv64-unknown-elf-objdump -d sum1ton.o | less # search for main
+riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o sum1ton.o sum1ton.c
+riscv64-unknown-elf-objdump -d sum1ton.o | less # search for main
+
+# code 3
+spike pk sum1ton.o
+spike -d pk sum1ton.o
+      until pc 0 100b0
+      reg 0 a2
+      <enter>
+      reg 0 a2
+      <enter>
+      reg 0 a0
+      <enter>
+      reg 0 sp
+      q
+spike -d pk sum1ton.o
+      until pc 0 100b8
+      reg 0 sp
+      <enter>
+      reg 0 sp
+
+# code 4
+riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o unsignedHighest.o unsignedHighest.c
+spike pk unsignedHighest.o
+# repeat for less than and greater than exp 64
+# repeat for mult by -1 in c file to get 0 & remove "unsigned" for negative num and replace llu with lld
+riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o signedHighest.o signedHighest.c
+spike pk signedHighest.o
+# ll introduced 2x bytes
