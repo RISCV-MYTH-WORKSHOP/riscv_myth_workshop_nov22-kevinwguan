@@ -198,7 +198,7 @@
             $is_auipc ? $pc + $imm :
             $is_jal ? $pc + 4 :
             $is_jalr ? $pc + 4 :
-            //$is_load 
+            $is_load || $is_s_instr ? $src1_value + $imm :
             //$is_sb 
             //$is_sh 
             //$is_sw 
@@ -223,9 +223,9 @@
             $is_and ? $src1_value & $src2_value :
             32'bx;
          
-         $rf_wr_data[31:0] = $result;
-         $rf_wr_index[4:0] = $rd;
-         $rf_wr_en = $valid && $rd_valid && ($rd != 0);
+         $rf_wr_data[31:0] = >>2$valid_load ? >>2$ld_data : $result;
+         $rf_wr_index[4:0] = >>2$valid_load ? >>2$rd : $rd;
+         $rf_wr_en = ($valid && $rd_valid && ($rd != 0)) || >>2$valid_load;
          
          $taken_br =
             $is_beq
