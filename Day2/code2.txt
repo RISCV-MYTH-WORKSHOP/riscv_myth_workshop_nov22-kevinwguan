@@ -1,0 +1,16 @@
+# Code 1
+riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o 1to9_custom.o 1to9_custom.c load.S
+spike pk 1to9_custom.o
+riscv64-unknown-elf-objdump -d 1to9_custom.o | less
+
+# Code 2
+cd riscv_workshop_collaterals
+ls -ltr
+cd labs
+ls -ltr
+vim picorv32.v
+less picorv32.v
+vim testbench.v
+vim rv32im.sh
+chmod 777 rv32im.sh
+./rv32im.sh # make sure commands are in $PATH
