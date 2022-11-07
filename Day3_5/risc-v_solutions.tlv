@@ -116,7 +116,7 @@
          $is_sltiu = $dec_bits ==? 11'bx_011_0010011;
          $is_xori = $dec_bits ==? 11'bx_100_0010011;
          $is_ori = $dec_bits ==? 11'bx_110_0010011;
-         $is_ani = $dec_bits ==? 11'bx_111_0010011;
+         $is_andi = $dec_bits ==? 11'bx_111_0010011;
          $is_slli = $dec_bits ==? 11'b0_001_0010011;
          $is_srli = $dec_bits ==? 11'b0_101_0010011;
          $is_srai = $dec_bits ==? 11'b1_101_0010011;
@@ -153,7 +153,7 @@
             $is_sltiu 
             $is_xori 
             $is_ori 
-            $is_ani 
+            $is_andi 
             $is_slli 
             $is_srli 
             $is_srai 
@@ -185,9 +185,39 @@
       @3 
          $valid = !(>>1$valid_taken_br || >>2$valid_taken_br);
          
+         $sltu_rslt = $src1_value < $src2_value;
+         $sltiu_rslt = $src1_value < $imm;
+         
          $result[31:0] =
             $is_addi ? $src1_value + $imm :
             $is_add ? $src1_value + $src2_value :
+            $is_lui ? {$imm[31:12], 12'b0} :
+            $is_auipc ? $pc + $imm :
+            $is_jal ? $pc + 4 :
+            $is_jalr ? $pc + 4 :
+            //$is_load 
+            //$is_sb 
+            //$is_sh 
+            //$is_sw 
+            $is_slti ? ($src1_value[31] == $imm[31])
+               ? $sltiu_rslt : {31'b0, $src1_value[31]} :
+            $is_sltiu ? $sltiu_rslt :
+            $is_xori ? $src1_value ^ $imm :
+            $is_ori ? $src1_value | $imm :
+            $is_andi ? $src1_value & $imm :
+            $is_slli ? $src1_value << $imm[5:0] :
+            $is_srli ? $src1_value >> $imm[5:0] :
+            $is_srai ? { {32{$src1_value[31]}}, $src1_value} >> $imm[4:0] :
+            $is_sub ? $src1_value - $src2_value :
+            $is_sll ? $src1_value << $src2_value[4:0] :
+            $is_slt ? ($src1_value[31] == $src2_value[31])
+               ? $sltu_rslt : {31'b0, $src1_value[31]} :
+            $is_sltu ? $sltu_rslt :
+            $is_xor ? $src1_value ^ $src2_value :
+            $is_srl ? $src1_value >> $src2_value[4:0] :
+            $is_sra ? { {32{$src1_value[31]}}, $src1_value} >> $src2_value[4:0] :
+            $is_or ? $src1_value | $src2_value :
+            $is_and ? $src1_value & $src2_value :
             32'bx;
          
          $rf_wr_data[31:0] = $result;
