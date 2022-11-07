@@ -11,32 +11,44 @@
    |calc
       @0
          $reset = *reset;
-         $val1[31:0] = >>2$out;
-         $val2[31:0] = $rand2[3:0];
-         $op[1:0] = $sel[1:0];
+         
          
          // YOUR CODE HERE
       @1
          $valid = $reset ? 1'b0 : (>>1$valid + 1'b1);
          $valid_or_reset = $valid || $reset;
+         
       ?$valid_or_reset
          @1
+            $val1[31:0] = >>2$out;
+            $val2[31:0] = $rand2[3:0];
             $sum[31:0] = $val1 + $val2;
             $diff[31:0] = $val1 - $val2;
             $prod[31:0] = $val1 * $val2;
             $quot[31:0] = $val1 / $val2;
          @2
+            $op[2:0] = $sel[2:0];
             $out[31:0] =
                $reset
-                  ? 32'b0:
-               $op[1:0] == 2'b00
+                  ? 32'b0 :
+               $op[2:0] == 3'b000
                   ? $sum :
-               $op[1:0] == 2'b01
+               $op[2:0] == 3'b001
                   ? $diff :
-               $op[1:0] == 2'b10
+               $op[2:0] == 3'b010
                   ? $prod :
+               $op[2:0] == 3'b011
+                  ? $quot :
+               $op[2:0] == 3'b100
+                  ? >>2$mem :
+                  $val1;
+            $mem[31:0] =
+               $reset
+                  ? 32'b0 :
+               $op[2:0] == 3'b101
+                  ? >>2$out :
                //default
-                  $quot;
+                  >>2$mem;
          
 
       // Macro instantiations for calculator visualization(disabled by default).
